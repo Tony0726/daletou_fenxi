@@ -1,3 +1,4 @@
 *.py
 .DS_Store
 daletou_yuce.html
+.wrangler/
