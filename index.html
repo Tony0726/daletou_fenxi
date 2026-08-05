@@ -143,7 +143,8 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   body { height: auto; overflow: visible; display: block; }
   .container { flex: none; display: block; overflow: visible; }
   .panel.table-panel { flex: none; display: block; }
-  #tableWrap { flex: none; max-height: none; overflow: visible; }
+  /* 表格自身带横竖滚动条（横向不再撑破屏幕），下方导出/返回顶部可下滑到达 */
+  #tableWrap { flex: none; max-height: calc(100dvh - 150px); overflow: auto; -webkit-overflow-scrolling: touch; }
   /* 导出按钮：表格下方占满整行 */
   .table-footer { position: static; padding-top: 8px; }
   .table-footer .btn { width: 100%; min-width: 0; padding: 12px 10px; font-size: 15px; border-radius: 8px; box-shadow: none; }
