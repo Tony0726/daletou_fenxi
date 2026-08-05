@@ -125,26 +125,26 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 
 /* ================= 手机横屏：压缩纵向空间，操作区压成一行 ================= */
 @media (orientation: landscape) and (max-height: 520px) {
-  .header { padding: 6px 12px; }
+  .header { padding: 4px 12px; }
   .header h1 { font-size: 15px; }
-  .container { gap: 6px; padding: 6px; }
-  .panel { padding: 8px 10px; }
-  .controls { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; }
+  .container { gap: 4px; padding: 6px; }
+  .panel { padding: 6px 8px; }
+  .controls { display: flex; flex-wrap: nowrap; gap: 6px; align-items: center; }
   .field { flex-direction: row; gap: 6px; }
   .field label { font-size: 12px; }
-  .field select { font-size: 14px; width: 72px; padding: 6px 6px; }
-  .controls > .btn { padding: 10px 8px; font-size: 15px; min-height: 40px; }
-  .tabs { margin: 6px 0 2px; padding: 3px; }
-  .tab-btn { padding: 8px 8px; font-size: 15px; }
+  .field select { font-size: 14px; width: 68px; padding: 5px 6px; }
+  .controls > .btn { padding: 8px 6px; font-size: 15px; min-height: 36px; }
+  .tabs { margin: 4px 0 2px; padding: 2px; }
+  .tab-btn { padding: 5px 6px; font-size: 15px; }
   .legend, .table-tip, #dataInfo { display: none; }
-  #tableInfo { font-size: 12px; }
+  #tableInfo { font-size: 11px; margin-bottom: 3px; }
   .lottery-table th, .lottery-table td { padding: 2px 4px; font-size: 10.5px; min-width: 30px; }
   /* 横屏：恢复普通文档流，整页可上下滑动 */
   body { height: auto; overflow: visible; display: block; }
   .container { flex: none; display: block; overflow: visible; }
   .panel.table-panel { flex: none; display: block; }
-  /* 表格自身带横竖滚动条（横向不再撑破屏幕），下方导出/返回顶部可下滑到达 */
-  #tableWrap { flex: none; max-height: calc(100dvh - 150px); overflow: auto; -webkit-overflow-scrolling: touch; }
+  /* 表格自身带横竖滚动条（横向不再撑破屏幕），尽量占满屏幕高度，下方导出/返回顶部可下滑到达 */
+  #tableWrap { flex: none; max-height: calc(100dvh - 130px); overflow: auto; -webkit-overflow-scrolling: touch; }
   /* 导出按钮：表格下方占满整行 */
   .table-footer { position: static; padding-top: 8px; }
   .table-footer .btn { width: 100%; min-width: 0; padding: 12px 10px; font-size: 15px; border-radius: 8px; box-shadow: none; }
