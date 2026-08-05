@@ -237,7 +237,7 @@ const HEADERS_1 = [
 ];
 
 const HEADERS_2 = [
-  "蓝球第一位", "蓝球第二位", "跨度(蓝球第\n二位减蓝球\n第一位)", "降", "平", "升", "奇(整除余1)", "偶(整除余0)", "小(1~5)", "大(6~11)",
+  "期号", "蓝球第一位", "蓝球第二位", "跨度(蓝球第\n二位减蓝球\n第一位)", "降", "平", "升", "奇(整除余1)", "偶(整除余0)", "小(1~5)", "大(6~11)",
   "和值(第一位\n和第二位相加)", "小(1~11)", "大(12~24)", "奇(整除余1)", "偶(整除余0)", "和尾(第一位\n和第二位相\n加之和的个\n位数)", "大(5~9)", "小(0~4)", "奇(整除余1)", "偶(整除余0)",
   "蓝球第一位", "蓝球第二位", "第一位", "金(1 2 9 \n10)", "木(5 6)", "火(3 4 11 \n12)", "土(7 8)", "奇(整除余1)", "偶(整除余0)", "大(6~11)", "小(1~5)",
   "第二位", "金(1 2 9 \n10)", "木(5 6)", "火(3 4 11 \n12)", "土(7 8)", "奇(整除余1)", "偶(整除余0)", "大(7~12)", "小(2~6)",
@@ -246,7 +246,7 @@ const HEADERS_2 = [
 ];
 
 const HEADERS_3 = [
-  "", "期号", "", "第一位", "第二位", "第三位", "第四位", "第五位", "", "蓝球第一位", "蓝球第二位",
+  "期号", "第一位", "第二位", "第三位", "第四位", "第五位", "", "蓝球第一位", "蓝球第二位",
   "和值", "上期之和减\n这期之和", "蓝球之和",
   "前一(开奖号\n码第一位加\n开奖号码第\n五位)",
   "前一和值上\n一期减这一\n期前一和值", "尾小(0~4)", "尾大(5~9)",
@@ -521,9 +521,9 @@ function gen1(qishuArr, red, blue) {
 
 // 第二张表（对应 gen2）
 function gen2(qishuArr, red, blue) {
-  const stLine = -1, stCol = -1;
+  const stLine = -1, stCol = 0;
   const len = qishuArr.length;
-  const ncol = 56;
+  const ncol = 57;
   const grid = [];
   const setCell = (row, col, text, color) => {
     if (!grid[row]) grid[row] = [];
@@ -548,6 +548,7 @@ function gen2(qishuArr, red, blue) {
     const pFlag = x - 1 >= 0;
     const nFlag = x + 1 < len;
     const row = x + stLine + 1;
+    setCell(row, 0 + stCol, String(qishuArr[x]));
     const m = parseInt(blue[x][0], 10);
     const n = parseInt(blue[x][1], 10);
 
@@ -634,9 +635,9 @@ function gen2(qishuArr, red, blue) {
 
 // 第三张表（对应 gen3）
 function gen3(qishuArr, red, blue) {
-  const stLine = -1, stCol = -1;
+  const stLine = -1, stCol = -3;
   const len = qishuArr.length;
-  const ncol = 41;
+  const ncol = 39;
   const grid = [];
   const setCell = (row, col, text, color) => {
     if (!grid[row]) grid[row] = [];
@@ -659,8 +660,7 @@ function gen3(qishuArr, red, blue) {
       }
     }
     const row = x + stLine + 1;
-    setCell(row, 1 + stCol, String(x + 1));
-    setCell(row, 2 + stCol, String(qishuArr[x]));
+    setCell(row, 3 + stCol, String(qishuArr[x]));
 
     const a = parseInt(red[x][0], 10), b = parseInt(red[x][1], 10), c = parseInt(red[x][2], 10),
           d = parseInt(red[x][3], 10), e = parseInt(red[x][4], 10);
@@ -821,7 +821,7 @@ function renderTable(kind, grid, ncol) {
   lastGrid = grid; lastNcol = ncol; lastKind = kind;
   const wrap = document.getElementById('tableWrap');
   const headers = getHeader(kind);
-  const stickyCols = kind === 3 ? 3 : 1;   // 期号锚点列吸左（表3为 序号+期号）
+  const stickyCols = 1;   // 期号锚点列吸左（三张表统一）
   let html = '<table class="lottery-table"><thead><tr>';
   for (let c = 0; c < headers.length; c++) {
     const cls = c < stickyCols ? ' class="sticky"' : '';
