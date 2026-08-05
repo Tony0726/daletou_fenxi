@@ -17,22 +17,24 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 /* ===== 布局 ===== */
 .container { max-width: 100%; padding: 12px; }
 .panel { background: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.table-panel { position: relative; }
 
 /* ===== 操作区 ===== */
-.controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 8px; }
-.field { display: flex; align-items: center; gap: 8px; }
+.controls { display: flex; flex-wrap: nowrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+.controls > .field, .controls > .btn { flex: 1 1 0; min-width: 0; }
+.field { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .controls label { font-size: 14px; color: #555; white-space: nowrap; }
 .controls input[type="number"], .controls select { padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; width: 80px; background: #fff; }
 .controls input[type="number"]:focus, .controls select:focus { outline: none; border-color: #d32f2f; }
 /* 表切换 Tab（模仿 daletou_yuce.html 的分段样式） */
 .tabs { display: flex; gap: 4px; background: #f0f2f5; border-radius: 8px; padding: 4px; margin-top: 10px; }
-.tab-btn { flex: 1; padding: 10px 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; background: transparent; color: #666; transition: all .2s; touch-action: manipulation; }
+.tab-btn { flex: 1; padding: 12px 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; background: transparent; color: #666; transition: all .2s; touch-action: manipulation; }
 .tab-btn:hover { background: #fce4e4; color: #d32f2f; }
 .tab-btn.active { background: #d32f2f; color: #fff; box-shadow: 0 1px 3px rgba(211,47,47,.35); }
 .radio-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .radio-group label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px; }
 .radio-group input[type="radio"] { accent-color: #d32f2f; width: 15px; height: 15px; }
-.btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; touch-action: manipulation; }
+.btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all .2s; touch-action: manipulation; }
 .btn:active { transform: scale(.97); }
 .btn-primary { background: #d32f2f; color: #fff; }
 .btn-primary:hover { background: #b71c1c; }
@@ -99,16 +101,16 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   #tableInfo { margin-bottom: 5px; }
   #tableWrap { flex: 1; min-height: 0; max-height: none; border-radius: 6px; }
 
-  /* 操作区第一行：期数下拉 / 获取最新数据 / 刷新 均匀占位 */
-  .controls { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 0; }
-  .field { flex: 0 1 auto; }
-  .field label { font-size: 12px; }
-  .field select { font-size: 14px; width: 62px; padding: 8px 6px; }
-  .controls > .btn { flex: 0 1 auto; padding: 11px 6px; font-size: 12px; min-height: 40px; }
+  /* 操作区第一行：期数下拉 / 获取最新数据 / 刷新 均匀占满一整行 */
+  .controls { display: flex; flex-wrap: nowrap; align-items: stretch; gap: 8px; margin-bottom: 0; }
+  .field { flex-direction: column; justify-content: center; gap: 4px; }
+  .field label { font-size: 12px; text-align: center; }
+  .field select { font-size: 15px; width: 100%; padding: 7px 4px; text-align: center; }
+  .controls > .btn { padding: 12px 4px; font-size: 15px; min-height: 46px; }
   /* 表切换（第二行）：分段 Tab */
   .tabs { margin: 8px 0 4px; padding: 3px; }
-  .tab-btn { padding: 9px 4px; font-size: 14px; }
-  .table-footer .btn { min-width: 0; width: 100%; }
+  .tab-btn { padding: 10px 4px; font-size: 15px; }
+  .table-footer .btn { min-width: 0; width: 100%; padding: 12px 10px; font-size: 15px; }
 
   .legend { font-size: 11px; gap: 10px; }
   #dataInfo { font-size: 12px; }
@@ -127,18 +129,20 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   .header h1 { font-size: 15px; }
   .container { gap: 6px; padding: 6px; }
   .panel { padding: 8px 10px; }
-  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .field { margin-right: auto; }
-  .field select { width: 64px; padding: 6px 6px; }
-  .controls > .btn { padding: 8px 10px; font-size: 12px; min-height: 38px; }
+  .controls { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; }
+  .field { flex-direction: row; gap: 6px; }
+  .field label { font-size: 12px; }
+  .field select { font-size: 14px; width: 72px; padding: 6px 6px; }
+  .controls > .btn { padding: 10px 8px; font-size: 15px; min-height: 40px; }
   .tabs { margin: 6px 0 2px; padding: 3px; }
-  .tab-btn { padding: 6px 8px; font-size: 13px; }
+  .tab-btn { padding: 8px 8px; font-size: 15px; }
   .legend, .table-tip, #dataInfo { display: none; }
   #tableInfo { font-size: 12px; }
   .lottery-table th, .lottery-table td { padding: 2px 4px; font-size: 10.5px; min-width: 30px; }
-  .back-top { padding: 4px 0 6px; }
-  .table-footer { padding-top: 6px; }
-  .table-footer .btn { width: auto; min-width: 140px; padding: 8px 14px; }
+  /* 横屏：导出按钮悬浮于表格右下角、隐藏返回顶部，纵向空间让给表格 */
+  .table-footer { position: absolute; right: 14px; bottom: 26px; padding: 0; z-index: 20; }
+  .table-footer .btn { width: auto; min-width: 0; padding: 9px 16px; font-size: 14px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+  .back-top { display: none; }
 }
 </style>
 </head>
@@ -181,8 +185,8 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
           <option value="200">200</option>
         </select>
       </div>
-      <button class="btn btn-success" onclick="fetchAndProcess()">📥 获取最新数据</button>
-      <button class="btn btn-primary" onclick="generate()">🔄 刷新</button>
+      <button class="btn btn-success" onclick="fetchAndProcess()">获取最新数据</button>
+      <button class="btn btn-primary" onclick="generate()">刷新</button>
     </div>
     <div class="tabs" id="tableTabs">
       <button class="tab-btn active" type="button" onclick="switchTable(1, this)">📊 第一张表</button>
@@ -203,7 +207,7 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
     <div class="table-tip">表格可横向/纵向滚动，表头吸顶；表尾 4 行为「总出现次数 / 平均遗漏值 / 最大遗漏值 / 最大连出值」。</div>
     <div id="tableWrap"></div>
     <div class="table-footer">
-      <button class="btn btn-info" onclick="exportTable()">⬇️ 导出表格</button>
+      <button class="btn btn-info" onclick="exportTable()">导出表格</button>
     </div>
   </div>
 
