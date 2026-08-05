@@ -48,7 +48,7 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 #tableInfo { font-size: 13px; color: #d32f2f; font-weight: 600; margin-bottom: 8px; }
 .table-tip { font-size: 12px; color: #999; margin-bottom: 6px; }
 .table-tip b { font-weight: 600; }
-.table-footer { text-align: center; padding-top: 10px; }
+.table-footer { display: flex; justify-content: center; gap: 12px; padding-top: 10px; }
 .table-footer .btn { min-width: 150px; }
 /* 表格容器：水平+垂直滚动，表头吸顶 */
 #tableWrap { overflow: auto; max-height: calc(100vh - 240px); max-height: calc(100dvh - 250px); border: 1px solid #eee; border-radius: 8px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
@@ -79,9 +79,6 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 .legend .sw-green { background: #00c800; }
 .legend .sw-orange { background: #ffa500; }
 
-/* ===== 返回顶部 ===== */
-.back-top { text-align: center; padding: 10px 0 24px; }
-
 /* ===== 加载遮罩 ===== */
 #loadingOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 999999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
 #loadingOverlay.show { display: flex; }
@@ -92,35 +89,31 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 /* ================= 手机竖屏 & 横屏（含小平板）：应用式全屏布局 ================= */
 @media (max-width: 768px), (max-height: 520px) {
   body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
-  .header { flex-shrink: 0; padding: 10px 14px; }
-  .header h1 { font-size: 16px; }
+  .header { flex-shrink: 0; padding: 6px 14px; }
+  .header h1 { font-size: 15px; }
   .header .sub { display: none; }
-  .container { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px; overflow: hidden; }
-  .panel { flex-shrink: 0; padding: 10px; margin-bottom: 0; }
+  .container { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; padding: 6px; overflow: hidden; }
+  .panel { flex-shrink: 0; padding: 8px; margin-bottom: 0; }
   .panel.table-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  #tableInfo { margin-bottom: 5px; }
+  #tableInfo { font-size: 12px; margin-bottom: 4px; }
+  .table-tip { display: none; }
   #tableWrap { flex: 1; min-height: 0; max-height: none; border-radius: 6px; }
 
   /* 操作区第一行：期数下拉 / 获取最新数据 / 刷新 均匀占满一整行 */
   .controls { display: flex; flex-wrap: nowrap; align-items: stretch; gap: 8px; margin-bottom: 0; }
   .field { flex-direction: column; justify-content: center; gap: 4px; }
-  .field label { font-size: 12px; text-align: center; }
-  .field select { font-size: 15px; width: 100%; padding: 7px 4px; text-align: center; }
-  .controls > .btn { padding: 12px 4px; font-size: 15px; min-height: 46px; }
+  .field label { font-size: 11px; text-align: center; }
+  .field select { font-size: 14px; width: 100%; padding: 5px 4px; text-align: center; }
+  .controls > .btn { padding: 9px 4px; font-size: 15px; min-height: 40px; }
   /* 表切换（第二行）：分段 Tab */
-  .tabs { margin: 8px 0 4px; padding: 3px; }
-  .tab-btn { padding: 10px 4px; font-size: 15px; }
-  .table-footer .btn { min-width: 0; width: 100%; padding: 12px 10px; font-size: 15px; }
+  .tabs { margin: 6px 0 2px; padding: 2px; }
+  .tab-btn { padding: 6px 4px; font-size: 15px; }
+  /* 底部按钮栏：导出 + 返回顶部 并排，紧凑 */
+  .table-footer { flex: 0 0 auto; gap: 8px; padding: 5px 0 calc(6px + env(safe-area-inset-bottom)); }
+  .table-footer .btn { flex: 1; min-width: 0; width: auto; padding: 9px 8px; font-size: 15px; }
 
-  .legend { font-size: 11px; gap: 10px; }
-  #dataInfo { font-size: 12px; }
-  .table-tip { font-size: 11px; }
+  .legend, #dataInfo { display: none; }
   .lottery-table th, .lottery-table td { padding: 3px 5px; font-size: 11px; min-width: 34px; }
-
-  /* 返回顶部：页面最下方居中按钮（非悬浮） */
-  .back-top { flex-shrink: 0; text-align: center; padding: 8px 0 calc(10px + env(safe-area-inset-bottom)); }
-  .back-top .btn { width: auto; height: auto; border-radius: 8px; padding: 10px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 2px; }
-  .back-top .btn .fab-text { display: inline; }
 }
 
 /* ================= 手机横屏：压缩纵向空间，操作区压成一行 ================= */
@@ -145,13 +138,9 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   .panel.table-panel { flex: none; display: block; }
   /* 表格自身带横竖滚动条（横向不再撑破屏幕），尽量占满屏幕高度，下方导出/返回顶部可下滑到达 */
   #tableWrap { flex: none; max-height: calc(100dvh - 130px); overflow: auto; -webkit-overflow-scrolling: touch; }
-  /* 导出按钮：表格下方占满整行 */
-  .table-footer { position: static; padding-top: 8px; }
-  .table-footer .btn { width: 100%; min-width: 0; padding: 12px 10px; font-size: 15px; border-radius: 8px; box-shadow: none; }
-  /* 返回顶部：页面最下方居中 */
-  .back-top { display: block; padding: 8px 0 14px; }
-  .back-top .btn { width: auto; padding: 10px 18px; font-size: 15px; border-radius: 8px; display: inline-flex; align-items: center; gap: 2px; }
-  .back-top .btn .fab-text { display: inline; }
+  /* 底部按钮栏：导出占满一行，返回顶部在其下 */
+  .table-footer { display: block; padding-top: 6px; }
+  .table-footer .btn { width: 100%; min-width: 0; margin-bottom: 8px; padding: 10px 10px; font-size: 15px; border-radius: 8px; box-shadow: none; }
 }
 </style>
 </head>
@@ -217,13 +206,10 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
     <div id="tableWrap"></div>
     <div class="table-footer">
       <button class="btn btn-info" onclick="exportTable()">导出表格</button>
+      <button class="btn btn-primary" onclick="backTop()">⬆ 返回顶部</button>
     </div>
   </div>
 
-</div>
-
-<div class="back-top">
-  <button class="btn btn-primary" onclick="backTop()" aria-label="返回顶部">⬆<span class="fab-text"> 返回顶部</span></button>
 </div>
 
 <div id="loadingOverlay">
