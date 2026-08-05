@@ -2,25 +2,33 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>大乐透历史走势分析表</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f0f2f5; color: #333; font-size: 14px; }
+body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif; background: #f0f2f5; color: #333; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+
+/* ===== 头部 ===== */
 .header { background: linear-gradient(135deg, #e53935, #d32f2f); color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .header h1 { font-size: 22px; }
 .header .sub { font-size: 13px; opacity: 0.85; }
-#dataStatus { font-size: 13px; color: #ffcdd2; white-space: nowrap; }
+#dataStatus { font-size: 13px; color: #ffcdd2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 46%; flex-shrink: 1; }
+
+/* ===== 布局 ===== */
 .container { max-width: 100%; padding: 12px; }
-.panel { background: #fff; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.panel { background: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+/* ===== 操作区 ===== */
 .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 8px; }
+.field { display: flex; align-items: center; gap: 8px; }
 .controls label { font-size: 14px; color: #555; white-space: nowrap; }
-.controls input[type="number"] { padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 80px; }
+.controls input[type="number"] { padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; width: 80px; }
 .controls input[type="number"]:focus { outline: none; border-color: #d32f2f; }
 .radio-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .radio-group label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px; }
 .radio-group input[type="radio"] { accent-color: #d32f2f; width: 15px; height: 15px; }
-.btn { padding: 7px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
+.btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; touch-action: manipulation; }
+.btn:active { transform: scale(.97); }
 .btn-primary { background: #d32f2f; color: #fff; }
 .btn-primary:hover { background: #b71c1c; }
 .btn-success { background: #43a047; color: #fff; }
@@ -28,42 +36,101 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f
 .btn-info { background: #1976d2; color: #fff; }
 .btn-info:hover { background: #0d47a1; }
 #dataInfo { color: #888; font-size: 13px; margin-top: 4px; }
+
+/* ===== 表格区 ===== */
 #tableInfo { font-size: 13px; color: #d32f2f; font-weight: 600; margin-bottom: 8px; }
 .table-tip { font-size: 12px; color: #999; margin-bottom: 6px; }
 .table-tip b { font-weight: 600; }
 /* 表格容器：水平+垂直滚动，表头吸顶 */
-#tableWrap { overflow: auto; max-height: calc(100vh - 240px); border: 1px solid #eee; border-radius: 6px; }
+#tableWrap { overflow: auto; max-height: calc(100vh - 240px); max-height: calc(100dvh - 250px); border: 1px solid #eee; border-radius: 8px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .lottery-table { border-collapse: collapse; font-size: 12px; white-space: nowrap; }
 .lottery-table th, .lottery-table td { border: 1px solid #e0e0e0; padding: 3px 7px; text-align: center; min-width: 38px; }
 .lottery-table thead th { position: sticky; top: 0; background: #d32f2f; color: #fff; font-weight: 600; z-index: 2; box-shadow: 0 1px 0 #e0e0e0; }
 .lottery-table tbody tr:hover td { background: #fff3e0; }
 .lottery-table .sum-row td { background: #fff8e1; }
 .lottery-table .sum-row td:first-child { font-weight: 700; color: #e65100; }
+
+/* 期号锚点列吸左（横向滚动时保持定位） */
+.lottery-table th.sticky, .lottery-table td.sticky { position: sticky; left: 0; z-index: 2; }
+.lottery-table td.sticky { background: #fff; }
+.lottery-table tbody tr:hover td.sticky { background: #ffe6c4; }
+.lottery-table .sum-row td.sticky { background: #fff8e1; }
+.lottery-table thead th.sticky { top: 0; left: 0; z-index: 5; }
+
 .c-red { color: #ff0000; font-weight: 700; }
 .c-blue { color: #0000ff; font-weight: 700; }
 .c-green { color: #00c800; }
 .c-orange { color: #ffa500; font-weight: 700; }
+
+/* ===== 图例 ===== */
 .legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font-size: 12px; color: #666; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
 .legend .sw-red { background: #ff0000; }
 .legend .sw-blue { background: #0000ff; }
 .legend .sw-green { background: #00c800; }
 .legend .sw-orange { background: #ffa500; }
+
+/* ===== 返回顶部 ===== */
 .back-top { text-align: center; padding: 10px 0 24px; }
-/* 加载遮罩 */
+
+/* ===== 加载遮罩 ===== */
 #loadingOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 999999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
 #loadingOverlay.show { display: flex; }
 .loading-spinner { width: 52px; height: 52px; border: 5px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
 .loading-text { color: #fff; font-size: 16px; font-weight: 600; }
 @keyframes spin { to { transform: rotate(360deg); } }
-@media (max-width: 768px) {
-  .header { padding: 10px 12px; }
+
+/* ================= 手机竖屏 & 横屏（含小平板）：应用式全屏布局 ================= */
+@media (max-width: 768px), (max-height: 520px) {
+  body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+  .header { flex-shrink: 0; padding: 10px 14px; }
   .header h1 { font-size: 16px; }
   .header .sub { display: none; }
-  .container { padding: 6px; }
-  .panel { padding: 10px; }
-  .controls { gap: 8px; }
-  .lottery-table th, .lottery-table td { padding: 2px 5px; font-size: 11px; min-width: 32px; }
+  .container { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px; overflow: hidden; }
+  .panel { flex-shrink: 0; padding: 10px; margin-bottom: 0; }
+  .panel.table-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  #tableInfo { margin-bottom: 5px; }
+  #tableWrap { flex: 1; min-height: 0; max-height: none; border-radius: 6px; }
+
+  /* 操作区：两列网格，按钮触控加宽 */
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0; }
+  .field { grid-column: 1 / -1; }
+  .field label { font-size: 14px; }
+  .field input[type="number"] { font-size: 16px; width: 90px; padding: 8px 10px; }
+  .field .btn { margin-left: auto; padding: 10px 18px; min-height: 44px; }
+  .radio-group { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #f0f2f5; border-radius: 10px; padding: 4px; }
+  .radio-group label { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 9px 4px; border-radius: 8px; font-size: 13px; background: transparent; transition: all .2s; }
+  .radio-group input[type="radio"] { display: none; }
+  .radio-group label:has(input:checked) { background: #d32f2f; color: #fff; font-weight: 600; box-shadow: 0 1px 3px rgba(211,47,47,.35); }
+  .btn.wide { width: 100%; min-height: 46px; padding: 12px 10px; font-size: 14px; }
+
+  .legend { font-size: 11px; gap: 10px; }
+  #dataInfo { font-size: 12px; }
+  .table-tip { font-size: 11px; }
+  .lottery-table th, .lottery-table td { padding: 3px 5px; font-size: 11px; min-width: 34px; }
+
+  /* 返回顶部 → 悬浮圆钮（避开底部安全区） */
+  .back-top { position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 100; padding: 0; }
+  .back-top .btn { width: 48px; height: 48px; border-radius: 50%; padding: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
+  .back-top .btn .fab-text { display: none; }
+}
+
+/* ================= 手机横屏：压缩纵向空间，操作区压成一行 ================= */
+@media (orientation: landscape) and (max-height: 520px) {
+  .header { padding: 6px 12px; }
+  .header h1 { font-size: 15px; }
+  .container { gap: 6px; padding: 6px; }
+  .panel { padding: 8px 10px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .field { margin-right: auto; }
+  .field input[type="number"] { width: 74px; padding: 6px 8px; }
+  .field .btn { margin-left: 0; padding: 8px 14px; min-height: 40px; }
+  .radio-group { display: flex; flex-wrap: nowrap; gap: 6px; }
+  .radio-group label { padding: 7px 10px; font-size: 12px; }
+  .btn.wide { width: auto; min-height: 40px; padding: 8px 14px; }
+  .legend, .table-tip, #dataInfo { display: none; }
+  #tableInfo { font-size: 12px; }
+  .lottery-table th, .lottery-table td { padding: 2px 4px; font-size: 10.5px; min-width: 30px; }
 }
 </style>
 </head>
@@ -81,16 +148,18 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f
 
   <div class="panel">
     <div class="controls">
-      <label>请输入期数:</label>
-      <input type="number" id="qishu" value="30" min="1" max="100" onchange="generate()" onkeydown="if(event.key==='Enter')generate()">
+      <div class="field">
+        <label for="qishu">请输入期数:</label>
+        <input type="number" id="qishu" value="30" min="1" max="100" onchange="generate()" onkeydown="if(event.key==='Enter')generate()">
+        <button class="btn btn-primary" onclick="generate()">🔄 确定</button>
+      </div>
       <div class="radio-group">
         <label><input type="radio" name="tableNo" value="1" checked onchange="generate()"> 第一张表</label>
         <label><input type="radio" name="tableNo" value="2" onchange="generate()"> 第二张表</label>
         <label><input type="radio" name="tableNo" value="3" onchange="generate()"> 第三张表</label>
       </div>
-      <button class="btn btn-primary" onclick="generate()">🔄 确定</button>
-      <button class="btn btn-success" onclick="fetchAndProcess()">📥 获取最新数据</button>
-      <button class="btn btn-info" onclick="exportTable()">⬇️ 导出表格</button>
+      <button class="btn btn-success wide" onclick="fetchAndProcess()">📥 获取最新数据</button>
+      <button class="btn btn-info wide" onclick="exportTable()">⬇️ 导出表格</button>
     </div>
     <div class="legend">
       <span><i class="sw-red"></i>红球号码</span>
@@ -101,7 +170,7 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f
     <div id="dataInfo">未加载数据</div>
   </div>
 
-  <div class="panel">
+  <div class="panel table-panel">
     <div id="tableInfo">请先获取数据后生成表格</div>
     <div class="table-tip">表格可横向/纵向滚动，表头吸顶；表尾 4 行为「总出现次数 / 平均遗漏值 / 最大遗漏值 / 最大连出值」。</div>
     <div id="tableWrap"></div>
@@ -110,7 +179,7 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f
 </div>
 
 <div class="back-top">
-  <button class="btn btn-primary" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆ 返回顶部</button>
+  <button class="btn btn-primary" onclick="backTop()" aria-label="返回顶部">⬆<span class="fab-text"> 返回顶部</span></button>
 </div>
 
 <div id="loadingOverlay">
@@ -717,8 +786,12 @@ function renderTable(kind, grid, ncol) {
   lastGrid = grid; lastNcol = ncol; lastKind = kind;
   const wrap = document.getElementById('tableWrap');
   const headers = getHeader(kind);
+  const stickyCols = kind === 3 ? 3 : 1;   // 期号锚点列吸左（表3为 序号+期号）
   let html = '<table class="lottery-table"><thead><tr>';
-  for (const h of headers) html += '<th>' + h.split('\n').join('<br>') + '</th>';
+  for (let c = 0; c < headers.length; c++) {
+    const cls = c < stickyCols ? ' class="sticky"' : '';
+    html += '<th' + cls + '>' + headers[c].split('\n').join('<br>') + '</th>';
+  }
   html += '</tr></thead><tbody>';
   const sumStart = grid.length - 4;
   for (let r = 0; r < grid.length; r++) {
@@ -727,11 +800,12 @@ function renderTable(kind, grid, ncol) {
     html += '<tr' + trCls + '>';
     for (let c = 0; c < ncol; c++) {
       const cell = row ? row[c] : null;
+      const stickyCls = c < stickyCols ? 'sticky ' : '';
       if (!cell) {
-        html += '<td></td>';
+        html += '<td class="' + stickyCls.trim() + '"></td>';
       } else {
         const ccls = cell.color ? ' c-' + cell.color : '';
-        html += '<td class="' + ccls.trim() + '">' + cell.text + '</td>';
+        html += '<td class="' + (stickyCls + ccls).trim() + '">' + cell.text + '</td>';
       }
     }
     html += '</tr>';
@@ -815,6 +889,14 @@ function exportTable() {
     '_' + pad(now.getHours()) + '-' + pad(now.getMinutes()) + '-' + pad(now.getSeconds()) + '-' +
     String(now.getMilliseconds()).padStart(3, '0') + '.xlsx';
   XLSX.writeFile(wb, fname);
+}
+
+// ====================== 返回顶部 ======================
+// 手机端为内部滚动（#tableWrap），桌面端为窗口滚动，两者都处理
+function backTop() {
+  const wrap = document.getElementById('tableWrap');
+  if (wrap) wrap.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ====================== 初始化 ======================
