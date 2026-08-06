@@ -91,7 +91,6 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   body { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
   .header { flex-shrink: 0; padding: 6px 14px; }
   .header h1 { font-size: 15px; }
-  .header .sub { display: none; }
   .container { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; padding: 6px; overflow: hidden; }
   .panel { flex-shrink: 0; padding: 8px; margin-bottom: 0; }
   .panel.table-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
@@ -116,10 +115,18 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   .lottery-table th, .lottery-table td { padding: 3px 5px; font-size: 11px; min-width: 34px; }
 }
 
+/* 仅竖屏（窄窗口或矮窗口）隐藏副标题；横屏不受影响，保证横屏可见 */
+@media (orientation: portrait) and (max-width: 768px), (orientation: portrait) and (max-height: 520px) {
+  .header .sub { display: none; }
+}
+
 /* ================= 手机横屏：压缩纵向空间，操作区压成一行 ================= */
 @media (orientation: landscape) and (max-height: 520px) {
   .header { padding: 4px 12px; }
   .header h1 { font-size: 15px; }
+  /* 横屏恢复副标题（与标题并排，节省纵向空间；空间不足时省略号截断） */
+  .header > div:first-child { display: flex; align-items: baseline; gap: 8px; min-width: 0; overflow: hidden; }
+  .header .sub { display: inline-block; font-size: 11px; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .container { gap: 4px; padding: 6px; }
   .panel { padding: 6px 8px; }
   .controls { display: flex; flex-wrap: nowrap; gap: 6px; align-items: center; }
