@@ -46,7 +46,11 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 #dataInfo { color: #888; font-size: 13px; margin-top: 4px; }
 
 /* ===== 表格区 ===== */
-#tableInfo { font-size: 13px; color: #d32f2f; font-weight: 600; margin-bottom: 8px; }
+.table-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-shrink: 0; }
+#tableInfo { font-size: 13px; color: #d32f2f; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fs-btn { display: inline-flex; align-items: center; gap: 4px; background: #f0f2f5; border: 1px solid #ddd; color: #555; font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0; touch-action: manipulation; }
+.fs-btn:hover { background: #e3e3e3; color: #d32f2f; }
+.fs-btn:active { transform: scale(.96); }
 .table-tip { font-size: 12px; color: #999; margin-bottom: 6px; }
 .table-tip b { font-weight: 600; }
 .table-footer { display: flex; justify-content: center; gap: 12px; padding-top: 10px; }
@@ -72,6 +76,22 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 .c-green { color: #00c800; }
 .c-orange { color: #ffa500; font-weight: 700; }
 
+/* ===== 全屏表格 ===== */
+.fs-overlay { position: fixed; inset: 0; z-index: 100000; background: #fff; display: none; flex-direction: column; }
+.fs-overlay.show { display: flex; }
+.fs-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #d32f2f; color: #fff; padding: 10px 14px; flex-shrink: 0; }
+.fs-bar .fs-title { font-size: 15px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fs-exit { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.4); color: #fff; font-size: 13px; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: all .2s; touch-action: manipulation; }
+.fs-exit:hover { background: rgba(255,255,255,.3); }
+.fs-exit:active { transform: scale(.97); }
+#fsTableWrap { flex: 1; min-height: 0; overflow: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+/* 桌面/宽屏全屏时放大单元格便于阅读；手机端沿用紧凑尺寸 */
+@media (min-width: 769px) {
+  #fsTableWrap .lottery-table { font-size: 13px; }
+  #fsTableWrap .lottery-table th, #fsTableWrap .lottery-table td { padding: 5px 10px; min-width: 46px; }
+}
+body.fs-open { overflow: hidden; }
+
 /* ===== 图例 ===== */
 .legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font-size: 12px; color: #666; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
@@ -95,7 +115,8 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   .container { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; padding: 6px; overflow: hidden; }
   .panel { flex-shrink: 0; padding: 8px; margin-bottom: 0; }
   .panel.table-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  #tableInfo { font-size: 12px; margin-bottom: 4px; }
+  .table-head { margin-bottom: 4px; }
+  #tableInfo { font-size: 12px; }
   .table-tip { display: none; }
   #tableWrap { flex: 1; min-height: 0; max-height: none; border-radius: 6px; }
 
@@ -138,7 +159,8 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   .tabs { margin: 4px 0 2px; padding: 2px; }
   .tab-btn { padding: 5px 6px; font-size: 15px; }
   .legend, .table-tip, #dataInfo { display: none; }
-  #tableInfo { font-size: 11px; margin-bottom: 3px; }
+  .table-head { margin-bottom: 3px; }
+  #tableInfo { font-size: 11px; }
   .lottery-table th, .lottery-table td { padding: 2px 4px; font-size: 10.5px; min-width: 30px; }
   /* 横屏：恢复普通文档流，整页可上下滑动 */
   body { height: auto; overflow: visible; display: block; }
@@ -165,6 +187,9 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   #dataInfo { color: #9aa0a6; }
 
   #tableInfo { color: #ef9a9a; }
+  .fs-btn { background: #262a2f; border-color: #3a3f46; color: #a8adb4; }
+  .fs-btn:hover { background: #33383e; color: #ef9a9a; }
+  .fs-overlay { background: #1f2226; }
   .table-tip { color: #8a9096; }
   #tableWrap { border-color: #2f3338; }
   .lottery-table th, .lottery-table td { border-color: #33383e; }
@@ -242,7 +267,10 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
   </div>
 
   <div class="panel table-panel">
-    <div id="tableInfo">请先获取数据后生成表格</div>
+    <div class="table-head">
+      <div id="tableInfo">请先获取数据后生成表格</div>
+      <button type="button" class="fs-btn" onclick="openFullscreen()" title="全屏显示表格">⛶ 全屏</button>
+    </div>
     <div class="table-tip">表格可横向/纵向滚动，表头吸顶；表尾 4 行为「总出现次数 / 平均遗漏值 / 最大遗漏值 / 最大连出值」。</div>
     <div id="tableWrap"></div>
     <div class="table-footer">
@@ -256,6 +284,14 @@ body { font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
 <div id="loadingOverlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">⏳ 生成中，请稍候...</div>
+</div>
+
+<div id="fullscreenOverlay" class="fs-overlay">
+  <div class="fs-bar">
+    <span class="fs-title" id="fsTitle">大乐透走势表</span>
+    <button type="button" class="fs-exit" onclick="closeFullscreen()">✕ 退出全屏</button>
+  </div>
+  <div id="fsTableWrap"></div>
 </div>
 
 <!-- 导出组件(SheetJS)：页面加载时自动加载 -->
@@ -981,6 +1017,61 @@ function backTop() {
   if (wrap) wrap.scrollTo({ top: 0, behavior: 'smooth' });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// ====================== 全屏显示表格 ======================
+function openFullscreen() {
+  const table = document.querySelector('#tableWrap .lottery-table');
+  if (!table) { alert('请先生成表格'); return; }
+  const info = document.getElementById('tableInfo').textContent;
+  document.getElementById('fsTitle').textContent = info || '大乐透走势表';
+
+  const fsWrap = document.getElementById('fsTableWrap');
+  fsWrap.innerHTML = '';
+  fsWrap.appendChild(table.cloneNode(true));   // 克隆当前表格，保留全部样式类
+
+  const overlay = document.getElementById('fullscreenOverlay');
+  overlay.classList.add('show');
+  document.body.classList.add('fs-open');
+
+  // 桌面浏览器尝试原生全屏（隐藏浏览器栏）；移动端不支持时退化为应用内全屏
+  const reqFS = overlay.requestFullscreen || overlay.webkitRequestFullscreen;
+  if (reqFS) {
+    try {
+      const p = reqFS.call(overlay);
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { /* 忽略不支持的情况 */ }
+  }
+}
+
+function closeFullscreen() {
+  const overlay = document.getElementById('fullscreenOverlay');
+  if (!overlay.classList.contains('show')) return;
+  overlay.classList.remove('show');
+  document.body.classList.remove('fs-open');
+
+  // 同步退出原生全屏（若处于全屏状态）
+  const doc = document;
+  const exitFS = doc.exitFullscreen || doc.webkitExitFullscreen;
+  if (exitFS && (doc.fullscreenElement || doc.webkitFullscreenElement)) {
+    exitFS.call(doc);
+  }
+}
+
+// 按 Esc 退出应用内全屏
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && document.getElementById('fullscreenOverlay').classList.contains('show')) {
+    closeFullscreen();
+  }
+});
+
+// 原生全屏被系统退出（如按 Esc）时，同步关闭应用内全屏层
+document.addEventListener('fullscreenchange', function () {
+  const overlay = document.getElementById('fullscreenOverlay');
+  if (!document.fullscreenElement && overlay.classList.contains('show')) {
+    overlay.classList.remove('show');
+    document.body.classList.remove('fs-open');
+  }
+});
 
 // ====================== 初始化 ======================
 window.onload = function () {
